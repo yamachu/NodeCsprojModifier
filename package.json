@@ -2,6 +2,9 @@
   "name": "@yamachu/node-csproj-modifier",
   "version": "1.0.0",
   "license": "MIT",
+  "repository": {
+    "url": "git://github.com/yamachu/NodeCsprojModifier.git"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
