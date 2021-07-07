@@ -3,7 +3,7 @@ import {
   insertTargetFrameworkSwitcherImporter,
   listing,
   switchTargetFramework,
-} from "./Usecases";
+} from "../src/Usecases";
 
 const _args = process.argv.slice(2);
 const command = _args.shift();
