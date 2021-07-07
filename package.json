@@ -1,5 +1,5 @@
 {
-  "name": "@yamachu/NodeCsprojModifier",
+  "name": "@yamachu/node-csproj-modifier",
   "version": "1.0.0",
   "license": "MIT",
   "publishConfig": {
