@@ -14,7 +14,9 @@ export const EXTENSION_CONFIGURE_FILE_TEMPLATE = (
   _strings: TemplateStringsArray,
   targetFramework: string
 ) => `<Project>
-    <!-- NOTE: DO NOT EDIT YOURSELF -->
+    <!-- NOTE: DO NOT EDIT YOURSELF
+        You should add this file to gitignore
+    -->
     <PropertyGroup>
         <TargetFramework>${targetFramework}</TargetFramework>
     </PropertyGroup>
