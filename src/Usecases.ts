@@ -113,6 +113,11 @@ export const getTargetFramework = async (
     dirname(csprojFilePath),
     EXTENSION_CONFIGURE_FILE_NAME
   );
-  const content = await getFileContent(extensionFilePath);
+  const content = await getFileContent(extensionFilePath).catch(
+    (_) => undefined
+  );
+  if (content === undefined) {
+    return undefined;
+  }
   return parseExtensionConfig(content);
 };
