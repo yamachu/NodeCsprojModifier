@@ -2,4 +2,6 @@
 src/
 Makefile
 tsconfig.cli.json
+tsconfig.test.json
 cli/
+test/
