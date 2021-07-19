@@ -1,4 +1,4 @@
-import test from "ava";
+import anyTest, { TestInterface } from "ava";
 import { resolve } from "path";
 import type { ProjectInfo } from "../src/Types";
 import {
@@ -8,7 +8,11 @@ import {
   switchTargetFramework,
 } from "../src/Usecases";
 
-let __context: ProjectInfo;
+const test = anyTest as TestInterface<{
+  current: {
+    project: ProjectInfo;
+  };
+}>;
 
 const SAMPLEPROJECT_JSON: ProjectInfo = {
   projectName: "SampleProject" as const,
@@ -29,6 +33,10 @@ const SAMPLEPROJECT_WINUI_JSON: ProjectInfo = {
   },
   projectResolvedPath: "__NO_ASSERTION__",
 };
+
+test.before((t) => {
+  t.context = { current: { project: SAMPLEPROJECT_JSON } };
+});
 
 test.serial("listing projects base sln", async (t) => {
   const solutionWithProjects = await listing(
@@ -58,7 +66,7 @@ test.serial("listing projects base sln", async (t) => {
     t.deepEqual(actual, expected);
   })();
 
-  __context = projects[0];
+  t.context.current.project = projects[0];
 });
 
 test.serial("listing projects base project", async (t) => {
@@ -78,7 +86,9 @@ test.serial("listing projects base project", async (t) => {
 });
 
 test.serial("insertTargetFrameworkSwitcherImporter", async (t) => {
-  await insertTargetFrameworkSwitcherImporter(__context.projectResolvedPath);
+  await insertTargetFrameworkSwitcherImporter(
+    t.context.current.project.projectResolvedPath
+  );
 
   const solutionWithProjects = await listing(
     resolve(__dirname, "resources", "SampleProject")
@@ -88,9 +98,9 @@ test.serial("insertTargetFrameworkSwitcherImporter", async (t) => {
 
   const { projectResolvedPath: _, ...actual } = project;
   const expected = {
-    ...__context,
+    ...t.context.current.project,
     projectSettings: {
-      ...__context.projectSettings,
+      ...t.context.current.project.projectSettings,
       extensionEntryAdded: true,
     },
   };
@@ -98,18 +108,18 @@ test.serial("insertTargetFrameworkSwitcherImporter", async (t) => {
 
   t.deepEqual(actual, expectedPartial);
 
-  __context = expected;
+  t.context.current.project = expected;
 });
 
 test.serial("switchTargetFramework and getTargetFramework", async (t) => {
   const expectedTargetFramework = "net6.0-maccatalyst";
   await switchTargetFramework(
-    __context.projectResolvedPath,
+    t.context.current.project.projectResolvedPath,
     expectedTargetFramework
   );
 
   const targetFramework = await getTargetFramework(
-    __context.projectResolvedPath
+    t.context.current.project.projectResolvedPath
   );
   t.assert(targetFramework === "net6.0-maccatalyst");
 });
