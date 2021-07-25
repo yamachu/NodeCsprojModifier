@@ -56,7 +56,7 @@ export const listing = async (
           .then(parseSolution)
           .then((v) => ({
             solutionName: x.name,
-            projects: v,
+            projects: v.filter((p) => p.relativePath.endsWith(".csproj")),
           }))
       )
     );
