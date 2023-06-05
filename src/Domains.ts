@@ -15,7 +15,8 @@ export const parseCsproj = (csprojContent: string): ProjectSettings => {
   const parsed = parse(csprojContent, { ignoreAttributes: false });
 
   const innerProject = parsed["Project"] ?? {};
-  // TargetFrameworkやTargetFrameworksは一つという前提でreduceでmergeする
+  // TargetFrameworkやTargetFrameworksは複数のPropertyGroupに分散せずに
+  // 同一のPropertyGroupにまとめられていることを前提とする
   const innerPropertyGroup = propertyToArrayed(
     innerProject,
     CSPROJ_PROPERTY_PropertyGroup
