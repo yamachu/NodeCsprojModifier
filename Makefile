@@ -9,7 +9,7 @@ build:
 	npx tsc
 
 build/cli:
-	npx tsc build --project tsconfig.cli.json
+	npx tsc --project tsconfig.cli.json
 
 run/list: TARGET_DIR=
 run/list:
