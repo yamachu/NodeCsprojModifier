@@ -1,4 +1,5 @@
 import anyTest, { TestInterface } from "ava";
+import { copyFile, rm } from "fs/promises";
 import { resolve } from "path";
 import type { ProjectInfo } from "../src/Types";
 import {
@@ -13,6 +14,38 @@ const test = anyTest as TestInterface<{
     project: ProjectInfo;
   };
 }>;
+
+test.after.always(async () => {
+  await rm(
+    resolve(
+      __dirname,
+      "resources",
+      "SampleProject",
+      "SampleProject",
+      "TargetFrameworkSwitcher.targets"
+    ),
+    {
+      force: true,
+    }
+  );
+
+  await copyFile(
+    resolve(
+      __dirname,
+      "resources",
+      "SampleProject",
+      "SampleProject",
+      "SampleProject.csproj.template"
+    ),
+    resolve(
+      __dirname,
+      "resources",
+      "SampleProject",
+      "SampleProject",
+      "SampleProject.csproj"
+    )
+  );
+});
 
 const SAMPLEPROJECT_JSON: ProjectInfo = {
   projectName: "SampleProject" as const,
