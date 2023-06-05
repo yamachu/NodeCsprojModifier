@@ -1,6 +1,6 @@
 {
   "name": "@yamachu/node-csproj-modifier",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "repository": {
     "url": "git://github.com/yamachu/NodeCsprojModifier.git"
