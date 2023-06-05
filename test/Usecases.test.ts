@@ -34,6 +34,22 @@ const SAMPLEPROJECT_WINUI_JSON: ProjectInfo = {
   projectResolvedPath: "__NO_ASSERTION__",
 };
 
+const MULTIPLE_TARGETFRAMEWORKS_JSON: ProjectInfo = {
+  projectName: "MultipleTargetFrameworksEntriesProject",
+  projectSettings: {
+    targetFrameworks: [
+      "net8.0-android",
+      "net8.0-ios",
+      "net8.0-maccatalyst",
+      "$(TargetFrameworks)",
+      "net8.0-windows10.0.19041.0",
+    ],
+    targetFramework: undefined,
+    extensionEntryAdded: false,
+  },
+  projectResolvedPath: "__NO_ASSERTION__",
+};
+
 test.before((t) => {
   t.context = { current: { project: SAMPLEPROJECT_JSON } };
 });
@@ -51,7 +67,7 @@ test.serial("listing projects base sln", async (t) => {
 
   const projects = solutionWithProjects.get(expectedSolutionFileName)!;
 
-  t.assert(projects.length === 2);
+  t.assert(projects.length === 3);
   (() => {
     const { projectResolvedPath: _, ...actual } = projects[0];
     const { projectResolvedPath: __, ...expected } = SAMPLEPROJECT_JSON;
@@ -122,4 +138,19 @@ test.serial("switchTargetFramework and getTargetFramework", async (t) => {
     t.context.current.project.projectResolvedPath
   );
   t.assert(targetFramework === "net6.0-maccatalyst");
+});
+
+test.serial("support multiple TargetFrameworks entries", async (t) => {
+  const solutionWithProjects = await listing(
+    resolve(__dirname, "resources", "SampleProject")
+  );
+
+  const expectedSolutionFileName = "SampleProject.sln";
+  const projects = solutionWithProjects.get(expectedSolutionFileName)!;
+
+  const { projectResolvedPath: _, ...actual } = projects[2];
+  const { projectResolvedPath: __, ...expected } =
+    MULTIPLE_TARGETFRAMEWORKS_JSON;
+
+  t.deepEqual(actual, expected);
 });

@@ -28,6 +28,7 @@ run/current: TARGET_FILE=
 run/current:
 	node dist/cli/index.js current $(TARGET_FILE)
 
+.PHONY: test
 test:
 	TS_NODE_PROJECT=tsconfig.test.json NODE_PATH=. npx ava -v --fail-fast
 

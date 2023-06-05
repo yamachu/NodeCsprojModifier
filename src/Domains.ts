@@ -15,7 +15,8 @@ export const parseCsproj = (csprojContent: string): ProjectSettings => {
   const parsed = parse(csprojContent, { ignoreAttributes: false });
 
   const innerProject = parsed["Project"] ?? {};
-  // TargetFrameworkやTargetFrameworksは一つという前提でreduceでmergeする
+  // TargetFrameworkやTargetFrameworksは複数のPropertyGroupに分散せずに
+  // 同一のPropertyGroupにまとめられていることを前提とする
   const innerPropertyGroup = propertyToArrayed(
     innerProject,
     CSPROJ_PROPERTY_PropertyGroup
@@ -25,7 +26,14 @@ export const parseCsproj = (csprojContent: string): ProjectSettings => {
   }));
 
   const targetFrameworks = (
-    innerPropertyGroup[CSPROJ_PROPERTY_TargetFrameworks] ?? ""
+    Array.isArray(innerPropertyGroup[CSPROJ_PROPERTY_TargetFrameworks])
+      ? innerPropertyGroup[CSPROJ_PROPERTY_TargetFrameworks].map(
+          (x: any) =>
+            typeof x === "string"
+              ? x
+              : x["#text"] /* NOTE: Conditionなどが存在する時はObjectになる */
+        ).join(";")
+      : innerPropertyGroup[CSPROJ_PROPERTY_TargetFrameworks] ?? ""
   ).split(";");
   const targetFramework = innerPropertyGroup[CSPROJ_PROPERTY_TargetFramework];
 
