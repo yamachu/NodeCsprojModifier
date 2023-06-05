@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleProject", "SampleProj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleProject.WinUI", "SampleProject.WinUI\SampleProject.WinUI.csproj", "{F3EF324C-FCC3-4200-BE24-91023D47328C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipleTargetFrameworksEntriesProject", "MultipleTargetFrameworksEntriesProject\MultipleTargetFrameworksEntriesProject.csproj", "{5B797F58-8FA6-41D5-9C75-3B8A70B3E3D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{F3EF324C-FCC3-4200-BE24-91023D47328C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3EF324C-FCC3-4200-BE24-91023D47328C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F3EF324C-FCC3-4200-BE24-91023D47328C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5B797F58-8FA6-41D5-9C75-3B8A70B3E3D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B797F58-8FA6-41D5-9C75-3B8A70B3E3D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B797F58-8FA6-41D5-9C75-3B8A70B3E3D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B797F58-8FA6-41D5-9C75-3B8A70B3E3D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
