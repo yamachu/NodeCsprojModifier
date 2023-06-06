@@ -1,4 +1,4 @@
-import { dirname, resolve } from "path";
+import { dirname, join, relative, resolve } from "path";
 import upath from "upath";
 import {
   EXTENSION_CONFIGURE_FILE_NAME,
@@ -19,22 +19,22 @@ const { normalize } = upath;
 export const listing = async (
   path: string
 ): Promise<ReadonlyMap<string, Array<ProjectInfo>>> => {
-  const currentDirFiles = lsDirFiles(path);
+  const recursiveDirFiles = lsDirFiles(path, true);
 
-  const solutionFiles = await currentDirFiles.then((x) =>
-    x.filter((d) => solutionFileRegex.test(d.name))
+  const solutionFiles = await recursiveDirFiles.then((x) =>
+    x.filter((d) => solutionFileRegex.test(d.dirent.name))
   );
 
   if (solutionFiles.length === 0) {
-    const maybeCsprojFile = await currentDirFiles.then((x) =>
-      x.find((d) => csprojFileRegex.test(d.name))
+    const maybeCsprojFile = await lsDirFiles(path).then((x) =>
+      x.find((d) => csprojFileRegex.test(d.dirent.name))
     );
     if (maybeCsprojFile === undefined) {
       return new Map();
     }
 
     const maybeParsedCsproj = await getFileContent(
-      resolve(path, maybeCsprojFile?.name)
+      resolve(path, maybeCsprojFile?.dirent.name)
     ).then(parseCsproj);
 
     return new Map([
@@ -42,9 +42,9 @@ export const listing = async (
         ".",
         [
           {
-            projectName: maybeCsprojFile.name.split(".csproj")[0],
+            projectName: maybeCsprojFile.dirent.name.split(".csproj")[0],
             projectSettings: maybeParsedCsproj,
-            projectResolvedPath: resolve(path, maybeCsprojFile.name),
+            projectResolvedPath: resolve(path, maybeCsprojFile.dirent.name),
           },
         ],
       ],
@@ -52,18 +52,24 @@ export const listing = async (
   } else {
     const solutionWithProjects = await Promise.all(
       solutionFiles.map((x) =>
-        getFileContent(resolve(path, x.name))
+        getFileContent(resolve(x.path, x.dirent.name))
           .then(parseSolution)
-          .then((v) => ({
-            solutionName: x.name,
-            projects: v.filter((p) => p.relativePath.endsWith(".csproj")),
-          }))
+          .then((v) => {
+            const relativePathSolutionName = normalize(
+              join(relative(path, x.path), x.dirent.name)
+            );
+            return {
+              solutionName: relativePathSolutionName,
+              basePath: x.path,
+              projects: v.filter((p) => p.relativePath.endsWith(".csproj")),
+            };
+          })
       )
     );
     const solutionWithProjectDeepParsed = await Promise.all(
       solutionWithProjects.flatMap((x) => {
         return x.projects.map((v) => {
-          const resolvedPath = resolve(path, normalize(v.relativePath));
+          const resolvedPath = resolve(x.basePath, normalize(v.relativePath));
           return getFileContent(resolvedPath)
             .then(parseCsproj)
             .then((projectSettings) => ({

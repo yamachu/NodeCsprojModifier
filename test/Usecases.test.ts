@@ -187,3 +187,18 @@ test.serial("support multiple TargetFrameworks entries", async (t) => {
 
   t.deepEqual(actual, expected);
 });
+
+test.serial("deeply listing projects base sln", async (t) => {
+  const solutionWithProjects = await listing(resolve(__dirname, "resources"));
+
+  // Path based name
+  const expectedSolutionFileName = "SampleProject/SampleProject.sln";
+
+  // solution file
+  t.assert(solutionWithProjects.size === 1);
+  t.assert([...solutionWithProjects.keys()][0], expectedSolutionFileName);
+
+  const projects = solutionWithProjects.get(expectedSolutionFileName)!;
+
+  t.assert(projects.length === 3);
+});
