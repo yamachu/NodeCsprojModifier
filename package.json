@@ -9,7 +9,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
-    "fast-xml-parser": "3.19.0",
+    "fast-xml-parser": "4.2.4",
     "touch": "3.1.0",
     "upath": "2.0.1"
   },
