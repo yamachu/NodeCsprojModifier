@@ -1,4 +1,4 @@
-import { parse } from "fast-xml-parser";
+import { XMLParser } from "fast-xml-parser";
 import {
   CSPROJ_PROPERTY_EXTENSION_CONFIGURE_FILE_NAME,
   CSPROJ_PROPERTY_Import,
@@ -12,7 +12,9 @@ import type { Project, ProjectSettings } from "./Types";
 import { detectSeparator, propertyToArrayed } from "./Utils";
 
 export const parseCsproj = (csprojContent: string): ProjectSettings => {
-  const parsed = parse(csprojContent, { ignoreAttributes: false });
+  const parsed = new XMLParser({
+    ignoreAttributes: false,
+  }).parse(csprojContent);
 
   const innerProject = parsed["Project"] ?? {};
   // TargetFrameworkやTargetFrameworksは複数のPropertyGroupに分散せずに
@@ -71,7 +73,7 @@ export const insertTargetFrameworkSwitcherImporterToCsproj = (
 export const parseExtensionConfig = (
   fileContent: string
 ): string | undefined => {
-  const parsed = parse(fileContent);
+  const parsed = new XMLParser().parse(fileContent);
   const innerProject = parsed["Project"] ?? {};
   const innerPropertyGroup = propertyToArrayed(
     innerProject,

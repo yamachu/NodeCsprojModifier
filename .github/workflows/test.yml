@@ -15,5 +15,5 @@ jobs:
         with:
           node-version: 18
           cache: 'yarn'
-      - run: yarn
-      - run: npx ava -v --fail-fast
+      - run: make init
+      - run: make test
